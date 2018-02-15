@@ -28,7 +28,8 @@
     port: 22
     host: "{{ do_new_droplet.droplet.ip_address }}"
     search_regex: OpenSSH
-    delay: 2
+    delay: 5
+    sleep: 20
   connection: local
 
 - name: Ensure host added to inventory
@@ -39,5 +40,5 @@
 
 - name: Ensure host has python installed
   remote_user: root
-  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  raw: test -e /usr/bin/python || (apt clean && apt update -qq && apt install python-minimal -qqy)
   delegate_to: "{{ do_new_droplet.droplet.ip_address }}"
