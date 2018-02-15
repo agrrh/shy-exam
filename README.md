@@ -12,7 +12,7 @@
 
 ### Что получилось
 
-**paste asciinema here**
+[![ASCIInema preview](https://asciinema.org/a/yplz7Srsf3eMCYLTjEaKIDGKg.png)](https://asciinema.org/a/yplz7Srsf3eMCYLTjEaKIDGKg)
 
 ### Общее описание
 
