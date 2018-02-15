@@ -1,0 +1,16 @@
+---
+
+- name: Ensure host removed
+  digital_ocean:
+    api_token: "{{ do_api_token }}"
+    state: absent
+    command: droplet
+    unique_name: yes
+    name: "{{ do_host_name }}"
+
+- name: Ensure SSH key removed
+  digital_ocean:
+    api_token: "{{ do_api_token }}"
+    state: absent
+    command: ssh
+    name: "{{ do_key_name }}"

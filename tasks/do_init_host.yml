@@ -1,0 +1,43 @@
+---
+
+- name: Ensure SSH key present on DigitalOcean account
+  digital_ocean:
+    api_token: "{{ do_api_token }}"
+    state: present
+    command: ssh
+    name: "{{ do_key_name }}"
+    ssh_pub_key: "{{ lookup('file', 'files/keys/id_rsa.pub') }}"
+  register: do_ssh_key_id
+
+- name: Ensure host created
+  digital_ocean:
+    api_token: "{{ do_api_token }}"
+    state: present
+    command: droplet
+    unique_name: yes
+    name: "{{ do_host_name }}"
+    size_id: "{{ do_size_id }}"
+    region_id: "{{ do_region }}"
+    image_id: "{{ do_image_id }}"
+    ssh_key_ids: "{{ do_ssh_key_id.ssh_key.id }}"
+    wait_timeout: 500
+  register: do_new_droplet
+
+- name: Wait until host is ready
+  wait_for:
+    port: 22
+    host: "{{ do_new_droplet.droplet.ip_address }}"
+    search_regex: OpenSSH
+    delay: 2
+  connection: local
+
+- name: Ensure host added to inventory
+  add_host:
+    hostname: "{{ do_host_name }}"
+    ansible_ssh_host: "{{ do_new_droplet.droplet.ip_address }}"
+    groups: digitalocean
+
+- name: Ensure host has python installed
+  remote_user: root
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  delegate_to: "{{ do_new_droplet.droplet.ip_address }}"

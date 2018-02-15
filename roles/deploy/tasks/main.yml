@@ -1,0 +1,26 @@
+---
+
+- name: Synchronize app files
+  synchronize:
+    src: "{{ deploy_src_path }}"
+    dest: "{{ deploy_dst_path }}"
+
+- name: Build app image
+  docker_image:
+    path: "{{ deploy_dst_path }}/{{ deploy_src_path | basename }}"
+    force: yes
+    name: cindicator-exam-app
+
+- name: Run app container
+  docker_container:
+    name: cindicator-exam-app
+    image: cindicator-exam-app
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "9000:8081"
+
+- name: Wait until container responds
+  wait_for:
+    port: 9000
+    delay: 2

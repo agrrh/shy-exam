@@ -1,0 +1,5 @@
+vars/digitalocean_secret.yml
+
+roles/*
+!roles/requirements.yml
+!roles/deploy

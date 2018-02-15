@@ -1,0 +1,57 @@
+---
+
+- name: Ensure host exists
+  hosts: localhost
+
+  vars_files:
+    - vars/digitalocean.yml
+    - vars/digitalocean_secret.yml
+
+  pre_tasks:
+    - import_tasks: tasks/do_init_host.yml
+      tags:
+        - deploy
+        - setup
+
+- name: Ensure host is configured
+  hosts: cindicator-exam-host
+  remote_user: root
+
+  roles:
+    - role: geerlingguy.pip
+      pip_install_packages:
+      - name: docker
+        version: "2.7.0"  # https://github.com/ansible/ansible/issues/35612
+      tags:
+        - setup
+
+    - role: geerlingguy.docker
+      tags:
+        - setup
+
+- name: Ensure app is deployed
+  hosts: cindicator-exam-host
+  remote_user: root
+
+  roles:
+    - role: deploy
+      tags:
+        - deploy
+
+  post_tasks:
+    - import_tasks: tasks/check-http.yml
+      delegate_to: localhost
+      tags:
+        - check
+
+- name: Ensure host is removed
+  hosts: localhost
+
+  vars_files:
+    - vars/digitalocean.yml
+    - vars/digitalocean_secret.yml
+
+  tasks:
+    - import_tasks: tasks/do_remove_host.yml
+      tags:
+        - clean

@@ -1,0 +1,4 @@
+---
+
+deploy_src_path: files/app
+deploy_dst_path: /root
