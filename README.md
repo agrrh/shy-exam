@@ -22,9 +22,9 @@
 
 Приложение упаковывается в контейнер просто как исходный текст, запускаемый через `node main.js` из образа `node:8-alpine`. Итоговый образ весит порядка 70 МБ. Это [базовый образ alpine + node.js](https://github.com/nodejs/docker-node/blob/4e5eda8fedf7fa355de6037f01d5699d414c1da3/8/alpine/Dockerfile) + исходный код, ничего лишнего.
 
-В дальнейшем образ предлагается ужать ещё больше, оставив только исполняемый файл nodejs, требуемые библиотеки и исходный код. Это было проделано [таким образом](https://agrrh.com/2018/strip-docker-container).
+В дальнейшем образ предлагается ужать ещё больше, оставив только исполняемый файл nodejs, требуемые библиотеки и исходный код. Это было проделано [таким образом](https://agrrh.com/posts/2017/strip-docker-container/).
 
-Сам исходный код приложения и Dockerfile находятся в [files/app/](https://github.com/agrrh/cindicator-exam/blob/master/files/app/).
+Сам исходный код приложения и Dockerfile находятся в [files/app/](https://github.com/agrrh/shy-exam/blob/master/files/app/).
 
 Для непосредственной работы с плейбуком имеются несколько флоу, разделенных тэгами:
 
@@ -39,8 +39,8 @@
 Клонируем репо, устанавливаем сопутствующее ПО и модули, роли:
 
 ```
-git clone git@github.com:agrrh/cindicator-exam.git
-cd cindicator-exam
+git clone git@github.com:agrrh/shy-exam.git
+cd shy-exam
 
 pip install -r requirements.txt
 
@@ -56,11 +56,11 @@ do_api_token: <your-token-here>
 ### Деплой
 
 ```
-ansible-playbook cindicator-exam.yml -t setup,deploy,check
+ansible-playbook shy-exam.yml -t setup,deploy,check
 ```
 
 ### Прибираем за собой
 
 ```
-ansible-playbook cindicator-exam.yml -t cleanup
+ansible-playbook shy-exam.yml -t cleanup
 ```
